@@ -80,6 +80,7 @@ impl Machine {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::panic;
 
     #[test]
     fn test_read() {
@@ -133,5 +134,29 @@ mod tests {
         m.patch(12, 2);
 
         assert_eq!(3716250, m.run())
+    }
+
+    #[test]
+    // The inputs should still be provided to the program by replacing the
+    // values at addresses 1 and 2, just like before. In this program, the value
+    // placed in address 1 is called the noun, and the value placed in address 2
+    // is called the verb. Each of the two input values will be between 0 and
+    // 99, inclusive.
+    //
+    // Find the input noun and verb that cause the program to produce the output
+    // 19690720. What is 100 * noun + verb? (For example, if noun=12 and verb=2,
+    // the answer would be 1202.)
+    fn test_guess() {
+        let mut m = Machine::new(&[
+            1, 0, 0, 3, 1, 1, 2, 3, 1, 3, 4, 3, 1, 5, 0, 3, 2, 1, 10, 19, 2, 9, 19, 23, 2, 23, 10,
+            27, 1, 6, 27, 31, 1, 31, 6, 35, 2, 35, 10, 39, 1, 39, 5, 43, 2, 6, 43, 47, 2, 47, 10,
+            51, 1, 51, 6, 55, 1, 55, 6, 59, 1, 9, 59, 63, 1, 63, 9, 67, 1, 67, 6, 71, 2, 71, 13,
+            75, 1, 75, 5, 79, 1, 79, 9, 83, 2, 6, 83, 87, 1, 87, 5, 91, 2, 6, 91, 95, 1, 95, 9, 99,
+            2, 6, 99, 103, 1, 5, 103, 107, 1, 6, 107, 111, 1, 111, 10, 115, 2, 115, 13, 119, 1,
+            119, 6, 123, 1, 123, 2, 127, 1, 127, 5, 0, 99, 2, 14, 0, 0,
+        ]);
+
+        m.patch(64, 72);
+        assert_eq!(19690720, m.run());
     }
 }
