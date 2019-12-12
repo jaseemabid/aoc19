@@ -1,0 +1,11 @@
+[package]
+name = "advent"
+version = "0.1.0"
+authors = ["Jaseem Abid <jaseemabid@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+
+[[bin]]
+name = "advent"
+path = "src/main.rs"
