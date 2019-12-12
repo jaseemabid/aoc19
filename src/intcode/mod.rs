@@ -20,6 +20,13 @@ impl Machine {
         self.step(0)
     }
 
+    // To complete the gravity assist, you need to determine what pair of inputs
+    // produces the output 19690720."
+    pub fn patch(&mut self, a: usize, b: usize) {
+        self.ops[1] = a;
+        self.ops[2] = b;
+    }
+
     fn step(&mut self, pc: usize) -> usize {
         match self.exec(pc) {
             None => self.step(pc + 4),
@@ -123,9 +130,7 @@ mod tests {
         // this, before running the program, replace position 1 with the value
         // 12 and replace position 2 with the value 2. What value is left at
         // position 0 after the program halts?
-
-        m.ops[1] = 12;
-        m.ops[2] = 2;
+        m.patch(12, 2);
 
         assert_eq!(3716250, m.run())
     }
