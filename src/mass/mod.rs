@@ -27,15 +27,13 @@ pub fn with_fuel(w: i64) -> i64 {
 // What is the sum of the fuel requirements for all of the modules on your
 // spacecraft?
 pub fn main() {
-    let mut sum = 0;
-    let stdin = io::stdin();
-
-    for ref line in stdin.lock().lines() {
-        match line.as_ref().map(|l| l.parse::<i64>()) {
-            Ok(Ok(num)) => sum += with_fuel(num),
-            _ => eprintln!("Something went wrong: {:?}", line),
-        }
-    }
+    let sum: i64 = io::stdin()
+        .lock()
+        .lines()
+        .filter_map(|l| l.ok())
+        .filter_map(|l| l.parse().ok())
+        .map(with_fuel)
+        .sum();
 
     println!("{}", sum)
 }
@@ -57,5 +55,16 @@ mod tests {
         // 654 + 216 + 70 + 21 + 5 = 966
         assert_eq!(966, with_fuel(1969));
         assert_eq!(50346, with_fuel(100756));
+    }
+
+    #[test]
+    fn q() {
+        let f: i64 = include_str!("input")
+            .lines()
+            .filter_map(|l| l.parse::<i64>().ok())
+            .map(with_fuel)
+            .sum();
+
+        assert_eq!(4822435, f);
     }
 }
